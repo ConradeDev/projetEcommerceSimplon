@@ -12,7 +12,7 @@ module.exports.verifyToken = async (req, res, next) => {
         }
 
         // 2. Extraire le token
-        const token = authHeader.split(' ')[1];
+        let token = authHeader.split(' ')[1];
 
         // 3. Vérifier le token
         const decoded = jwt.verify(token, process.env.JWT_secret);
@@ -25,18 +25,14 @@ module.exports.verifyToken = async (req, res, next) => {
         }
 
         // 5. Vérifier que l'utilisateur existe toujours
-        const user = await User.findOne({ _id: decoded.userId });
-        if (!user) {
-            return res.status(404).json({
-                message: "Utilisateur non trouvé"
-            });
-        }
+        req.user = await User.findOne({ _id: decoded.userId }).select("-password");
+        
 
         // 6. Attacher les informations utilisateur à la requête
-        req.user = {
-            userId: decoded.userId,
-            roleUser: decoded.roleUser
-        };
+        // req.user = {
+        //     userId: decoded.userId,
+        //     roleUser: decoded.roleUser
+        // };
 
         // 7. Passer au middleware suivant
         next();
@@ -61,3 +57,7 @@ module.exports.verifyToken = async (req, res, next) => {
         });
     }
 };
+
+module.exports.adminVerifyToken=(req,res,next)=>{
+    
+}

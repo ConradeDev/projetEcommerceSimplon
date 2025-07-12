@@ -12,7 +12,7 @@ const PORT = process.env.PORT;
 app.use(cors());
 
 app.use(express.json())
-app.use('/api/user',routeUser);
+app.use('/api/users',routeUser);
 app.use('/api-shop',routeShop);
 
 
